@@ -110,14 +110,14 @@ export function CatalogSection() {
           <div className="flex flex-wrap gap-3 items-center">
             {/* STEM Category filter */}
             <Select
-              value={selectedCategory || ''}
-              onValueChange={(val) => setSelectedCategory(val as STEMCategory || null)}
+              value={selectedCategory || 'all'}
+              onValueChange={(val) => setSelectedCategory(val === 'all' ? null : val as STEMCategory)}
             >
               <SelectTrigger className="w-[160px]">
                 <SelectValue placeholder="Área STEM" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todas as áreas</SelectItem>
+                <SelectItem value="all">Todas as áreas</SelectItem>
                 {stemCategories.map((cat) => (
                   <SelectItem key={cat} value={cat}>{cat}</SelectItem>
                 ))}
@@ -126,14 +126,14 @@ export function CatalogSection() {
 
             {/* Type filter */}
             <Select
-              value={selectedType || ''}
-              onValueChange={(val) => setSelectedType(val as InitiativeType || null)}
+              value={selectedType || 'all'}
+              onValueChange={(val) => setSelectedType(val === 'all' ? null : val as InitiativeType)}
             >
               <SelectTrigger className="w-[160px]">
                 <SelectValue placeholder="Tipo" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os tipos</SelectItem>
+                <SelectItem value="all">Todos os tipos</SelectItem>
                 {initiativeTypes.map((type) => (
                   <SelectItem key={type} value={type}>{type}</SelectItem>
                 ))}
@@ -142,14 +142,14 @@ export function CatalogSection() {
 
             {/* Country filter */}
             <Select
-              value={selectedCountry || ''}
-              onValueChange={(val) => setSelectedCountry(val || null)}
+              value={selectedCountry || 'all'}
+              onValueChange={(val) => setSelectedCountry(val === 'all' ? null : val)}
             >
               <SelectTrigger className="w-[160px]">
                 <SelectValue placeholder="País" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os países</SelectItem>
+                <SelectItem value="all">Todos os países</SelectItem>
                 {countries.map((country) => (
                   <SelectItem key={country} value={country}>{country}</SelectItem>
                 ))}
