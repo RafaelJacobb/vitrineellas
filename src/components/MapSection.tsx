@@ -165,12 +165,12 @@ export function MapSection() {
               <label className="text-sm font-medium text-foreground mb-2 block">
                 Selecionar País
               </label>
-              <Select value={selectedCountry || ''} onValueChange={(val) => setSelectedCountry(val || null)}>
+              <Select value={selectedCountry || 'all'} onValueChange={(val) => setSelectedCountry(val === 'all' ? null : val)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Todos os países" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos os países</SelectItem>
+                  <SelectItem value="all">Todos os países</SelectItem>
                   {countryStats.map((country) => (
                     <SelectItem key={country.code} value={country.country}>
                       {country.country} ({country.initiatives})
