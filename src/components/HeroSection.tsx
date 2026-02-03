@@ -15,16 +15,18 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
   
   const { scrollY } = useScroll();
   
-  // Trophy moves down as user scrolls
-  const trophyY = useTransform(scrollY, [0, 300], [0, 150]);
-  const trophyScale = useTransform(scrollY, [0, 300], [1, 0.85]);
+  // Trophy animation - moves down and slightly left to align with highlight
+  const trophyY = useTransform(scrollY, [0, 400], [0, 320]);
+  const trophyX = useTransform(scrollY, [0, 400], [0, -60]);
+  const trophyScale = useTransform(scrollY, [0, 400], [1, 0.9]);
   
-  // Highlight card appears as user scrolls
-  const highlightOpacity = useTransform(scrollY, [100, 300], [0, 1]);
-  const highlightX = useTransform(scrollY, [100, 300], [80, 0]);
+  // Highlight card appears as trophy arrives
+  const highlightOpacity = useTransform(scrollY, [150, 350], [0, 1]);
+  const highlightX = useTransform(scrollY, [150, 350], [60, 0]);
+  const highlightScale = useTransform(scrollY, [150, 350], [0.95, 1]);
 
   return (
-    <section id="hero" className="relative min-h-[140vh] pt-20 md:pt-24 overflow-hidden">
+    <section id="hero" className="relative min-h-[160vh] pt-20 md:pt-24 overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 bg-gradient-map opacity-50" />
       <div className="absolute top-20 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-soft" />
@@ -88,12 +90,12 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
             </div>
           </motion.div>
 
-          {/* Right content - Trophy (25%) */}
+          {/* Right content - Trophy (25%) - animated on scroll */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            style={{ y: trophyY, scale: trophyScale }}
+            style={{ y: trophyY, x: trophyX, scale: trophyScale }}
             className="flex justify-center lg:justify-end"
           >
             <div className="relative">
@@ -102,7 +104,7 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
               <motion.img
                 src={ellasTrophy}
                 alt="ELLAS Trophy - Símbolo feminino com átomo"
-                className="relative w-48 h-auto md:w-56 lg:w-64 drop-shadow-2xl"
+                className="relative w-48 h-auto md:w-56 lg:w-72 drop-shadow-2xl"
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               />
@@ -110,19 +112,19 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
           </motion.div>
         </div>
 
-        {/* Daily Highlight Section - appears below as user scrolls */}
-        <div className="mt-16 lg:mt-24">
+        {/* Daily Highlight Section - positioned to align with trophy after scroll */}
+        <div className="mt-8 lg:mt-16">
           <div className="grid lg:grid-cols-2 gap-8 items-center">
-            {/* Empty space for trophy to visually "land" */}
-            <div className="hidden lg:block" />
-            
-            {/* Daily Highlight Card - fades in on scroll */}
+            {/* Daily Highlight Card - fades in from right */}
             <motion.div
-              style={{ opacity: highlightOpacity, x: highlightX }}
+              style={{ opacity: highlightOpacity, x: highlightX, scale: highlightScale }}
               className="hidden lg:block"
             >
               <DailyHighlightCard initiative={dailyHighlight} />
             </motion.div>
+            
+            {/* Space where trophy "lands" */}
+            <div className="hidden lg:block" />
           </div>
         </div>
 
