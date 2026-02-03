@@ -15,15 +15,15 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
   
   const { scrollY } = useScroll();
   
-  // Trophy animation - moves down and to the LEFT (being "pushed" by highlight)
-  const trophyY = useTransform(scrollY, [0, 400], [0, 350]);
-  const trophyX = useTransform(scrollY, [0, 400], [0, -280]); // Moves left
-  const trophyScale = useTransform(scrollY, [0, 400], [1, 0.85]);
+  // Trophy animation - moves down, shrinks, and goes far LEFT
+  const trophyY = useTransform(scrollY, [0, 450], [0, 380]);
+  const trophyX = useTransform(scrollY, [0, 450], [0, -450]); // Moves much more left
+  const trophyScale = useTransform(scrollY, [0, 450], [1, 0.55]); // Shrinks more
   
-  // Highlight card slides in from RIGHT, "pushing" the trophy
-  const highlightOpacity = useTransform(scrollY, [150, 400], [0, 1]);
-  const highlightX = useTransform(scrollY, [150, 400], [200, 0]); // Comes from right
-  const highlightScale = useTransform(scrollY, [150, 400], [0.9, 1]);
+  // Highlight card slides in from RIGHT
+  const highlightOpacity = useTransform(scrollY, [200, 450], [0, 1]);
+  const highlightX = useTransform(scrollY, [200, 450], [300, 0]);
+  const highlightScale = useTransform(scrollY, [200, 450], [0.85, 1]);
 
   return (
     <section id="hero" className="relative min-h-[170vh] pt-20 md:pt-24 overflow-hidden">
