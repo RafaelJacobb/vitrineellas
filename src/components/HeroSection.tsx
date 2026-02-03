@@ -15,32 +15,32 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
   
   const { scrollY } = useScroll();
   
-  // Trophy animation - moves down and slightly left to align with highlight
-  const trophyY = useTransform(scrollY, [0, 400], [0, 320]);
-  const trophyX = useTransform(scrollY, [0, 400], [0, -60]);
-  const trophyScale = useTransform(scrollY, [0, 400], [1, 0.9]);
+  // Trophy animation - moves down and to the LEFT (being "pushed" by highlight)
+  const trophyY = useTransform(scrollY, [0, 400], [0, 350]);
+  const trophyX = useTransform(scrollY, [0, 400], [0, -280]); // Moves left
+  const trophyScale = useTransform(scrollY, [0, 400], [1, 0.85]);
   
-  // Highlight card appears as trophy arrives
-  const highlightOpacity = useTransform(scrollY, [150, 350], [0, 1]);
-  const highlightX = useTransform(scrollY, [150, 350], [60, 0]);
-  const highlightScale = useTransform(scrollY, [150, 350], [0.95, 1]);
+  // Highlight card slides in from RIGHT, "pushing" the trophy
+  const highlightOpacity = useTransform(scrollY, [150, 400], [0, 1]);
+  const highlightX = useTransform(scrollY, [150, 400], [200, 0]); // Comes from right
+  const highlightScale = useTransform(scrollY, [150, 400], [0.9, 1]);
 
   return (
-    <section id="hero" className="relative min-h-[160vh] pt-20 md:pt-24 overflow-hidden">
+    <section id="hero" className="relative min-h-[170vh] pt-20 md:pt-24 overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 bg-gradient-map opacity-50" />
       <div className="absolute top-20 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-soft" />
       <div className="absolute bottom-20 left-0 w-80 h-80 bg-accent/10 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: '1.5s' }} />
 
       <div className="container relative mx-auto px-4 py-12 md:py-16">
-        {/* Main Hero Grid - 75/25 layout */}
-        <div className="grid lg:grid-cols-[3fr_1fr] gap-8 items-start">
+        {/* Main Hero Grid - Text on left, Trophy on right */}
+        <div className="grid lg:grid-cols-[1fr_auto] gap-8 items-start">
           {/* Left content - Text */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center lg:text-left"
+            className="text-center lg:text-left max-w-2xl"
           >
             <Badge className="mb-6 bg-secondary text-secondary-foreground border-0 px-4 py-1.5 text-sm">
               🌟 Plataforma ELLAS
@@ -90,7 +90,7 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
             </div>
           </motion.div>
 
-          {/* Right content - Trophy (25%) - animated on scroll */}
+          {/* Right content - Trophy - will be "pushed" left on scroll */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -112,20 +112,14 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
           </motion.div>
         </div>
 
-        {/* Daily Highlight Section - positioned to align with trophy after scroll */}
-        <div className="mt-8 lg:mt-16">
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
-            {/* Daily Highlight Card - fades in from right */}
-            <motion.div
-              style={{ opacity: highlightOpacity, x: highlightX, scale: highlightScale }}
-              className="hidden lg:block"
-            >
-              <DailyHighlightCard initiative={dailyHighlight} />
-            </motion.div>
-            
-            {/* Space where trophy "lands" */}
-            <div className="hidden lg:block" />
-          </div>
+        {/* Daily Highlight Section - slides in from right, "pushing" trophy left */}
+        <div className="mt-8 lg:mt-16 flex justify-end">
+          <motion.div
+            style={{ opacity: highlightOpacity, x: highlightX, scale: highlightScale }}
+            className="hidden lg:block w-full max-w-md"
+          >
+            <DailyHighlightCard initiative={dailyHighlight} />
+          </motion.div>
         </div>
 
         {/* Mobile Daily Highlight - always visible */}
