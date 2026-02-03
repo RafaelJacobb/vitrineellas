@@ -15,11 +15,12 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
   
   const { scrollY } = useScroll();
   
-  // Scroll-linked animations - synchronized between 200px and 600px scroll
-  const trophyX = useTransform(scrollY, [200, 600], [0, -100]);
-  const trophyScale = useTransform(scrollY, [200, 600], [1, 0.85]);
+  // Single Sticky Actor - Trophy moves from right to left
+  // Starts at right side (translateX: 0), moves to left (translateX: -50vw)
+  const trophyX = useTransform(scrollY, [0, 600], ['calc(50vw - 8rem)', 'calc(-10vw)']);
+  const trophyScale = useTransform(scrollY, [0, 600], [1, 0.85]);
   
-  // Highlight card slides in from RIGHT
+  // Highlight card slides in from right
   const highlightOpacity = useTransform(scrollY, [200, 600], [0, 1]);
   const highlightX = useTransform(scrollY, [200, 600], [400, 0]);
 
@@ -30,10 +31,10 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
       <div className="absolute top-20 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-soft" />
       <div className="absolute bottom-20 left-0 w-80 h-80 bg-accent/10 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: '1.5s' }} />
 
-      <div className="container relative mx-auto px-4 py-12 md:py-16">
-        {/* Desktop: Initial Hero Grid - Text Left, Trophy Right */}
-        <div className="hidden lg:grid lg:grid-cols-[1fr_auto] gap-8 items-start">
-          {/* Left content - Text + Stats */}
+      {/* Desktop Layout */}
+      <div className="hidden lg:block">
+        {/* Text Content - Static, stays at top */}
+        <div className="container relative mx-auto px-4 py-12 md:py-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -87,61 +88,47 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
               </div>
             </div>
           </motion.div>
-
-          {/* Right content - Trophy (initial position, hidden after sticky takes over) */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex justify-end"
-          >
-            <div className="relative w-56 lg:w-64">
-              <div className="absolute -inset-8 bg-gradient-hero rounded-full opacity-20 blur-3xl animate-pulse-soft" />
-              <motion.img
-                src={ellasTrophy}
-                alt="ELLAS Trophy - Símbolo feminino com átomo"
-                className="relative w-full h-auto drop-shadow-2xl"
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              />
-            </div>
-          </motion.div>
         </div>
 
-        {/* Desktop: Sticky Container - Trophy + Highlight Card (appears on scroll) */}
-        <div className="hidden lg:block sticky top-32 z-30 mt-24">
-          <div className="grid grid-cols-2 gap-8 items-center">
-            {/* Left Column - Trophy (slides from right to left) */}
-            <motion.div
-              style={{ x: trophyX, scale: trophyScale, opacity: highlightOpacity }}
-              className="flex justify-center"
-            >
-              <div className="relative">
-                <div className="absolute -inset-8 bg-gradient-hero rounded-full opacity-20 blur-3xl animate-pulse-soft" />
-                <motion.img
-                  src={ellasTrophy}
-                  alt="ELLAS Trophy - Símbolo feminino com átomo"
-                  className="relative w-56 lg:w-64 h-auto drop-shadow-2xl"
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                />
-              </div>
-            </motion.div>
+        {/* SINGLE STICKY ACTOR - Trophy Container */}
+        <div className="sticky top-24 z-20 h-0">
+          <div className="container mx-auto px-4">
+            <div className="relative h-[400px]">
+              {/* Single Trophy Element - Travels from right to left */}
+              <motion.div
+                style={{ x: trophyX, scale: trophyScale }}
+                className="absolute top-0 right-0"
+              >
+                <div className="relative w-56 lg:w-64">
+                  <div className="absolute -inset-8 bg-gradient-hero rounded-full opacity-20 blur-3xl animate-pulse-soft" />
+                  <motion.img
+                    src={ellasTrophy}
+                    alt="ELLAS Trophy - Símbolo feminino com átomo"
+                    className="relative w-full h-auto drop-shadow-2xl"
+                    animate={{ y: [0, -8, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                </div>
+              </motion.div>
 
-            {/* Right Column - Highlight Card (slides in from right) */}
-            <motion.div
-              style={{ opacity: highlightOpacity, x: highlightX }}
-              className="flex justify-center"
-            >
-              <div className="w-full max-w-lg">
+              {/* Highlight Card - Slides in from right */}
+              <motion.div
+                style={{ opacity: highlightOpacity, x: highlightX }}
+                className="absolute top-0 right-0 w-full max-w-lg"
+              >
                 <DailyHighlightCard initiative={dailyHighlight} />
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </div>
         </div>
 
-        {/* Mobile Layout */}
-        <div className="lg:hidden">
+        {/* Spacer to allow scroll animation to complete */}
+        <div className="h-[60vh]" />
+      </div>
+
+      {/* Mobile Layout */}
+      <div className="lg:hidden">
+        <div className="container relative mx-auto px-4 py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
