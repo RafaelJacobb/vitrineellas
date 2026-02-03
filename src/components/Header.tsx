@@ -1,14 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Sparkles, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
 interface HeaderProps {
   onOpenCadastro: () => void;
 }
 
 export function Header({ onOpenCadastro }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navItems = [
     { label: 'Início', href: '#hero' },
@@ -18,21 +28,40 @@ export function Header({ onOpenCadastro }: HeaderProps) {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+    <motion.header 
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isScrolled 
+          ? 'bg-background/95 backdrop-blur-lg border-b border-border shadow-md py-2' 
+          : 'bg-transparent border-b border-transparent py-4'
+      }`}
+    >
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between h-14 md:h-16">
           {/* Logo */}
           <a href="#" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-hero flex items-center justify-center shadow-glow">
-              <Sparkles className="w-5 h-5 text-primary-foreground" />
-            </div>
+            <motion.div 
+              className={`rounded-xl bg-gradient-hero flex items-center justify-center shadow-glow transition-all duration-300 ${
+                isScrolled ? 'w-8 h-8' : 'w-10 h-10'
+              }`}
+              whileHover={{ scale: 1.05 }}
+            >
+              <Sparkles className={`text-primary-foreground transition-all duration-300 ${isScrolled ? 'w-4 h-4' : 'w-5 h-5'}`} />
+            </motion.div>
             <div className="flex flex-col">
-              <span className="font-display font-bold text-lg leading-tight text-foreground">
+              <span className={`font-display font-bold leading-tight text-foreground transition-all duration-300 ${
+                isScrolled ? 'text-base' : 'text-lg'
+              }`}>
                 Vitrine Ellas
               </span>
-              <span className="text-xs text-muted-foreground leading-tight">
+              <motion.span 
+                className="text-xs text-muted-foreground leading-tight"
+                animate={{ opacity: isScrolled ? 0 : 1, height: isScrolled ? 0 : 'auto' }}
+                transition={{ duration: 0.3 }}
+              >
                 Iniciativas STEM
-              </span>
+              </motion.span>
             </div>
           </a>
 
@@ -106,6 +135,6 @@ export function Header({ onOpenCadastro }: HeaderProps) {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </motion.header>
   );
 }

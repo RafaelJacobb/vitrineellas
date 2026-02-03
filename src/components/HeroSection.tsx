@@ -1,8 +1,9 @@
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Star, Users, MapPin, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { getDailyHighlight, getStatistics, type Initiative } from '@/data/initiatives';
+import ellasTrophy from '@/assets/ellas-trophy.png';
 
 interface HeroSectionProps {
   onOpenCadastro: () => void;
@@ -11,6 +12,11 @@ interface HeroSectionProps {
 export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
   const dailyHighlight = getDailyHighlight();
   const stats = getStatistics();
+  
+  const { scrollY } = useScroll();
+  const trophyX = useTransform(scrollY, [0, 400], [0, -150]);
+  const highlightX = useTransform(scrollY, [0, 400], [100, 0]);
+  const highlightOpacity = useTransform(scrollY, [100, 300], [0, 1]);
 
   return (
     <section id="hero" className="relative min-h-screen pt-20 md:pt-24 overflow-hidden">
@@ -76,16 +82,48 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
             </div>
           </motion.div>
 
-          {/* Right content - Daily Highlight */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative"
-          >
-            <DailyHighlightCard initiative={dailyHighlight} />
-          </motion.div>
+          {/* Right content - Trophy and Daily Highlight */}
+          <div className="relative min-h-[500px] md:min-h-[600px]">
+            {/* Trophy Image */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              style={{ x: trophyX }}
+              className="relative z-10 flex justify-center lg:justify-start"
+            >
+              <div className="relative">
+                {/* Glow effect behind trophy */}
+                <div className="absolute -inset-8 bg-gradient-hero rounded-full opacity-20 blur-3xl animate-pulse-soft" />
+                <motion.img
+                  src={ellasTrophy}
+                  alt="ELLAS Trophy - Símbolo feminino com átomo"
+                  className="relative w-64 h-auto md:w-80 lg:w-96 drop-shadow-2xl"
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                />
+              </div>
+            </motion.div>
+
+            {/* Daily Highlight Card - appears on scroll */}
+            <motion.div
+              style={{ x: highlightX, opacity: highlightOpacity }}
+              className="absolute top-1/2 -translate-y-1/2 right-0 lg:right-0 w-full max-w-sm lg:max-w-md hidden md:block"
+            >
+              <DailyHighlightCard initiative={dailyHighlight} />
+            </motion.div>
+          </div>
         </div>
+
+        {/* Mobile Daily Highlight - always visible */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mt-12 md:hidden"
+        >
+          <DailyHighlightCard initiative={dailyHighlight} />
+        </motion.div>
       </div>
     </section>
   );
@@ -104,56 +142,56 @@ function DailyHighlightCard({ initiative }: { initiative: Initiative }) {
       {/* Glow effect */}
       <div className="absolute -inset-4 bg-gradient-hero rounded-3xl opacity-20 blur-2xl animate-pulse-soft" />
       
-      <div className="relative bg-card rounded-2xl border border-border shadow-lg overflow-hidden">
+      <div className="relative bg-card/95 backdrop-blur-sm rounded-2xl border border-border shadow-lg overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-hero p-4 md:p-6">
+        <div className="bg-gradient-hero p-4 md:p-5">
           <div className="flex items-center gap-2 mb-2">
             <Star className="w-5 h-5 text-primary-foreground fill-current" />
             <span className="text-primary-foreground font-semibold text-sm uppercase tracking-wide">
               Destaque do Dia
             </span>
           </div>
-          <h3 className="font-display text-xl md:text-2xl font-bold text-primary-foreground">
+          <h3 className="font-display text-lg md:text-xl font-bold text-primary-foreground">
             {initiative.name}
           </h3>
         </div>
 
         {/* Content */}
-        <div className="p-4 md:p-6">
-          <p className="text-muted-foreground mb-4 line-clamp-3">
+        <div className="p-4 md:p-5">
+          <p className="text-muted-foreground mb-4 text-sm line-clamp-2">
             {initiative.description}
           </p>
 
           {/* Categories */}
           <div className="flex flex-wrap gap-2 mb-4">
             {initiative.categories.map((cat) => (
-              <span key={cat} className={`px-3 py-1 rounded-full text-xs font-medium ${categoryColors[cat]}`}>
+              <span key={cat} className={`px-2 py-0.5 rounded-full text-xs font-medium ${categoryColors[cat]}`}>
                 {cat}
               </span>
             ))}
           </div>
 
           {/* Meta info */}
-          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-4">
+          <div className="flex flex-wrap gap-3 text-xs text-muted-foreground mb-4">
             <div className="flex items-center gap-1">
-              <MapPin className="w-4 h-4" />
+              <MapPin className="w-3 h-3" />
               {initiative.city}, {initiative.country}
             </div>
             {initiative.beneficiaries && (
               <div className="flex items-center gap-1">
-                <Users className="w-4 h-4" />
-                {initiative.beneficiaries} beneficiárias
+                <Users className="w-3 h-3" />
+                {initiative.beneficiaries}
               </div>
             )}
             <div className="flex items-center gap-1">
-              <TrendingUp className="w-4 h-4" />
+              <TrendingUp className="w-3 h-3" />
               {initiative.type}
             </div>
           </div>
 
           {/* Organization */}
-          <div className="flex items-center justify-between pt-4 border-t border-border">
-            <span className="text-sm font-medium text-foreground">
+          <div className="flex items-center justify-between pt-3 border-t border-border">
+            <span className="text-xs font-medium text-foreground">
               {initiative.organization}
             </span>
             {initiative.website && (
@@ -161,9 +199,9 @@ function DailyHighlightCard({ initiative }: { initiative: Initiative }) {
                 href={initiative.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-primary hover:underline"
+                className="text-xs text-primary hover:underline"
               >
-                Visitar site →
+                Visitar →
               </a>
             )}
           </div>
