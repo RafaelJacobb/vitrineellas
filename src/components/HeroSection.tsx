@@ -15,24 +15,23 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
   
   const { scrollY } = useScroll();
   
-  // Trophy animation - moves down and stays on LEFT side of screen
-  const trophyY = useTransform(scrollY, [0, 500], [0, 420]);
-  const trophyScale = useTransform(scrollY, [0, 500], [1, 0.7]);
+  // Trophy moves LEFT when highlight appears (sticky behavior simulation)
+  const trophyX = useTransform(scrollY, [300, 600], [0, -200]);
+  const trophyScale = useTransform(scrollY, [300, 600], [1, 0.75]);
   
-  // Highlight card slides in from RIGHT to occupy right side
-  const highlightOpacity = useTransform(scrollY, [200, 500], [0, 1]);
-  const highlightX = useTransform(scrollY, [200, 500], [400, 0]);
-  const highlightScale = useTransform(scrollY, [200, 500], [0.8, 1]);
+  // Highlight card slides in from RIGHT
+  const highlightOpacity = useTransform(scrollY, [300, 600], [0, 1]);
+  const highlightX = useTransform(scrollY, [300, 600], [300, 0]);
 
   return (
-    <section id="hero" className="relative min-h-[170vh] pt-20 md:pt-24 overflow-hidden">
+    <section id="hero" className="relative min-h-[200vh] pt-20 md:pt-24 overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 bg-gradient-map opacity-50" />
       <div className="absolute top-20 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-soft" />
       <div className="absolute bottom-20 left-0 w-80 h-80 bg-accent/10 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: '1.5s' }} />
 
       <div className="container relative mx-auto px-4 py-12 md:py-16">
-        {/* Main Hero Grid - Text on left, Trophy on right */}
+        {/* Initial Hero Content */}
         <div className="grid lg:grid-cols-[1fr_auto] gap-8 items-start">
           {/* Left content - Text */}
           <motion.div
@@ -89,21 +88,26 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
             </div>
           </motion.div>
 
-          {/* Right content - Trophy - moves down to left side */}
+          {/* Spacer for initial layout */}
+          <div className="hidden lg:block w-64" />
+        </div>
+
+        {/* Sticky Trophy Container */}
+        <div className="hidden lg:block sticky top-32 z-20 pointer-events-none" style={{ marginTop: '-280px' }}>
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            style={{ y: trophyY, scale: trophyScale }}
-            className="flex justify-center lg:justify-end"
+            style={{ x: trophyX, scale: trophyScale }}
+            className="flex justify-end pr-8"
           >
-            <div className="relative">
+            <div className="relative pointer-events-auto">
               {/* Glow effect behind trophy */}
               <div className="absolute -inset-8 bg-gradient-hero rounded-full opacity-20 blur-3xl animate-pulse-soft" />
               <motion.img
                 src={ellasTrophy}
                 alt="ELLAS Trophy - Símbolo feminino com átomo"
-                className="relative w-48 h-auto md:w-56 lg:w-64 drop-shadow-2xl"
+                className="relative w-56 lg:w-64 h-auto drop-shadow-2xl"
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               />
@@ -111,22 +115,14 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
           </motion.div>
         </div>
 
-        {/* Full-width section for trophy + highlight after scroll */}
-        <div className="mt-8 lg:mt-16">
+        {/* Highlight Section - appears after scroll */}
+        <div className="hidden lg:block mt-48">
           <motion.div
-            style={{ opacity: highlightOpacity, x: highlightX, scale: highlightScale }}
-            className="hidden lg:grid lg:grid-cols-2 gap-8 items-center"
+            style={{ opacity: highlightOpacity, x: highlightX }}
+            className="flex justify-end"
           >
-            {/* Left side - empty space for trophy to land */}
-            <div className="flex justify-center">
-              {/* Trophy will visually land here via scroll animation */}
-            </div>
-            
-            {/* Right side - Highlight card */}
-            <div className="flex justify-center">
-              <div className="w-full max-w-lg">
-                <DailyHighlightCard initiative={dailyHighlight} />
-              </div>
+            <div className="w-full max-w-xl">
+              <DailyHighlightCard initiative={dailyHighlight} />
             </div>
           </motion.div>
         </div>
