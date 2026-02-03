@@ -14,9 +14,8 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
   const stats = getStatistics();
   
   const { scrollY } = useScroll();
-  const trophyX = useTransform(scrollY, [0, 400], [0, -150]);
-  const highlightX = useTransform(scrollY, [0, 400], [100, 0]);
-  const highlightOpacity = useTransform(scrollY, [100, 300], [0, 1]);
+  const highlightOpacity = useTransform(scrollY, [50, 200], [0, 1]);
+  const highlightX = useTransform(scrollY, [50, 200], [50, 0]);
 
   return (
     <section id="hero" className="relative min-h-screen pt-20 md:pt-24 overflow-hidden">
@@ -26,93 +25,90 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
       <div className="absolute bottom-20 left-0 w-80 h-80 bg-accent/10 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: '1.5s' }} />
 
       <div className="container relative mx-auto px-4 py-12 md:py-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left content */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center lg:text-left"
-          >
-            <Badge className="mb-6 bg-secondary text-secondary-foreground border-0 px-4 py-1.5 text-sm">
-              🌟 Plataforma ELLAS
-            </Badge>
-            
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-              Dando visibilidade para quem{' '}
-              <span className="text-gradient">constrói o futuro</span>{' '}
-              da ciência
-            </h1>
-            
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0">
-              Um acervo digital centralizado que conecta mulheres a oportunidades em STEM 
-              na América Latina. Descubra bolsas, mentorias e eventos.
-            </p>
+        {/* Top content - Title and CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-4xl mx-auto mb-12"
+        >
+          <Badge className="mb-6 bg-secondary text-secondary-foreground border-0 px-4 py-1.5 text-sm">
+            🌟 Plataforma ELLAS
+          </Badge>
+          
+          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+            Dando visibilidade para quem{' '}
+            <span className="text-gradient">constrói o futuro</span>{' '}
+            da ciência
+          </h1>
+          
+          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl mx-auto">
+            Um acervo digital centralizado que conecta mulheres a oportunidades em STEM 
+            na América Latina. Descubra bolsas, mentorias e eventos.
+          </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
-              <Button size="lg" className="bg-gradient-hero hover:opacity-90 shadow-glow group">
-                Explorar Iniciativas
-                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              <Button size="lg" variant="outline" onClick={onOpenCadastro}>
-                Cadastrar Iniciativa
-              </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <Button size="lg" className="bg-gradient-hero hover:opacity-90 shadow-glow group">
+              Explorar Iniciativas
+              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            <Button size="lg" variant="outline" onClick={onOpenCadastro}>
+              Cadastrar Iniciativa
+            </Button>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-6 max-w-md mx-auto">
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
+                {stats.totalInitiatives}+
+              </div>
+              <div className="text-sm text-muted-foreground">Iniciativas</div>
             </div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
+                {stats.totalCountries}
+              </div>
+              <div className="text-sm text-muted-foreground">Países</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
+                {(stats.totalBeneficiaries / 1000).toFixed(1)}k+
+              </div>
+              <div className="text-sm text-muted-foreground">Beneficiárias</div>
+            </div>
+          </div>
+        </motion.div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-6">
-              <div className="text-center lg:text-left">
-                <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
-                  {stats.totalInitiatives}+
-                </div>
-                <div className="text-sm text-muted-foreground">Iniciativas</div>
-              </div>
-              <div className="text-center lg:text-left">
-                <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
-                  {stats.totalCountries}
-                </div>
-                <div className="text-sm text-muted-foreground">Países</div>
-              </div>
-              <div className="text-center lg:text-left">
-                <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
-                  {(stats.totalBeneficiaries / 1000).toFixed(1)}k+
-                </div>
-                <div className="text-sm text-muted-foreground">Beneficiárias</div>
-              </div>
+        {/* Trophy and Daily Highlight Section - scrolls naturally with page */}
+        <div className="grid lg:grid-cols-2 gap-8 items-center">
+          {/* Trophy Image */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="flex justify-center"
+          >
+            <div className="relative">
+              {/* Glow effect behind trophy */}
+              <div className="absolute -inset-8 bg-gradient-hero rounded-full opacity-20 blur-3xl animate-pulse-soft" />
+              <motion.img
+                src={ellasTrophy}
+                alt="ELLAS Trophy - Símbolo feminino com átomo"
+                className="relative w-64 h-auto md:w-80 lg:w-96 drop-shadow-2xl"
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              />
             </div>
           </motion.div>
 
-          {/* Right content - Trophy and Daily Highlight */}
-          <div className="relative min-h-[500px] md:min-h-[600px]">
-            {/* Trophy Image */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              style={{ x: trophyX }}
-              className="relative z-10 flex justify-center lg:justify-start"
-            >
-              <div className="relative">
-                {/* Glow effect behind trophy */}
-                <div className="absolute -inset-8 bg-gradient-hero rounded-full opacity-20 blur-3xl animate-pulse-soft" />
-                <motion.img
-                  src={ellasTrophy}
-                  alt="ELLAS Trophy - Símbolo feminino com átomo"
-                  className="relative w-64 h-auto md:w-80 lg:w-96 drop-shadow-2xl"
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                />
-              </div>
-            </motion.div>
-
-            {/* Daily Highlight Card - appears on scroll */}
-            <motion.div
-              style={{ x: highlightX, opacity: highlightOpacity }}
-              className="absolute top-1/2 -translate-y-1/2 right-0 lg:right-0 w-full max-w-sm lg:max-w-md hidden md:block"
-            >
-              <DailyHighlightCard initiative={dailyHighlight} />
-            </motion.div>
-          </div>
+          {/* Daily Highlight Card - fades in on scroll */}
+          <motion.div
+            style={{ opacity: highlightOpacity, x: highlightX }}
+            className="hidden lg:block"
+          >
+            <DailyHighlightCard initiative={dailyHighlight} />
+          </motion.div>
         </div>
 
         {/* Mobile Daily Highlight - always visible */}
@@ -120,7 +116,7 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-12 md:hidden"
+          className="mt-12 lg:hidden"
         >
           <DailyHighlightCard initiative={dailyHighlight} />
         </motion.div>
