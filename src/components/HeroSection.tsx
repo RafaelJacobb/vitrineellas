@@ -15,15 +15,14 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
   
   const { scrollY } = useScroll();
   
-  // Trophy animation - moves down, shrinks, and goes far LEFT
-  const trophyY = useTransform(scrollY, [0, 450], [0, 380]);
-  const trophyX = useTransform(scrollY, [0, 450], [0, -450]); // Moves much more left
-  const trophyScale = useTransform(scrollY, [0, 450], [1, 0.55]); // Shrinks more
+  // Trophy animation - moves down and stays on LEFT side of screen
+  const trophyY = useTransform(scrollY, [0, 500], [0, 420]);
+  const trophyScale = useTransform(scrollY, [0, 500], [1, 0.7]);
   
-  // Highlight card slides in from RIGHT
-  const highlightOpacity = useTransform(scrollY, [200, 450], [0, 1]);
-  const highlightX = useTransform(scrollY, [200, 450], [300, 0]);
-  const highlightScale = useTransform(scrollY, [200, 450], [0.85, 1]);
+  // Highlight card slides in from RIGHT to occupy right side
+  const highlightOpacity = useTransform(scrollY, [200, 500], [0, 1]);
+  const highlightX = useTransform(scrollY, [200, 500], [400, 0]);
+  const highlightScale = useTransform(scrollY, [200, 500], [0.8, 1]);
 
   return (
     <section id="hero" className="relative min-h-[170vh] pt-20 md:pt-24 overflow-hidden">
@@ -90,12 +89,12 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
             </div>
           </motion.div>
 
-          {/* Right content - Trophy - will be "pushed" left on scroll */}
+          {/* Right content - Trophy - moves down to left side */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            style={{ y: trophyY, x: trophyX, scale: trophyScale }}
+            style={{ y: trophyY, scale: trophyScale }}
             className="flex justify-center lg:justify-end"
           >
             <div className="relative">
@@ -104,7 +103,7 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
               <motion.img
                 src={ellasTrophy}
                 alt="ELLAS Trophy - Símbolo feminino com átomo"
-                className="relative w-48 h-auto md:w-56 lg:w-72 drop-shadow-2xl"
+                className="relative w-48 h-auto md:w-56 lg:w-64 drop-shadow-2xl"
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               />
@@ -112,13 +111,23 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
           </motion.div>
         </div>
 
-        {/* Daily Highlight Section - slides in from right, "pushing" trophy left */}
-        <div className="mt-8 lg:mt-16 flex justify-end">
+        {/* Full-width section for trophy + highlight after scroll */}
+        <div className="mt-8 lg:mt-16">
           <motion.div
             style={{ opacity: highlightOpacity, x: highlightX, scale: highlightScale }}
-            className="hidden lg:block w-full max-w-md"
+            className="hidden lg:grid lg:grid-cols-2 gap-8 items-center"
           >
-            <DailyHighlightCard initiative={dailyHighlight} />
+            {/* Left side - empty space for trophy to land */}
+            <div className="flex justify-center">
+              {/* Trophy will visually land here via scroll animation */}
+            </div>
+            
+            {/* Right side - Highlight card */}
+            <div className="flex justify-center">
+              <div className="w-full max-w-lg">
+                <DailyHighlightCard initiative={dailyHighlight} />
+              </div>
+            </div>
           </motion.div>
         </div>
 
