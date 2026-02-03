@@ -15,127 +15,141 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
   
   const { scrollY } = useScroll();
   
-  // Trophy moves LEFT when highlight appears (sticky behavior simulation)
-  const trophyX = useTransform(scrollY, [300, 600], [0, -200]);
-  const trophyScale = useTransform(scrollY, [300, 600], [1, 0.75]);
+  // Scroll-linked animations - synchronized between 200px and 600px scroll
+  const trophyX = useTransform(scrollY, [200, 600], [0, -100]);
+  const trophyScale = useTransform(scrollY, [200, 600], [1, 0.85]);
   
   // Highlight card slides in from RIGHT
-  const highlightOpacity = useTransform(scrollY, [300, 600], [0, 1]);
-  const highlightX = useTransform(scrollY, [300, 600], [300, 0]);
+  const highlightOpacity = useTransform(scrollY, [200, 600], [0, 1]);
+  const highlightX = useTransform(scrollY, [200, 600], [400, 0]);
 
   return (
-    <section id="hero" className="relative min-h-[200vh] pt-20 md:pt-24 overflow-hidden">
+    <section id="hero" className="relative min-h-[180vh] pt-20 md:pt-24 overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 bg-gradient-map opacity-50" />
       <div className="absolute top-20 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-soft" />
       <div className="absolute bottom-20 left-0 w-80 h-80 bg-accent/10 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: '1.5s' }} />
 
       <div className="container relative mx-auto px-4 py-12 md:py-16">
-        {/* Initial Hero Content */}
-        <div className="grid lg:grid-cols-[1fr_auto] gap-8 items-start">
-          {/* Left content - Text */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center lg:text-left max-w-2xl"
-          >
-            <Badge className="mb-6 bg-secondary text-secondary-foreground border-0 px-4 py-1.5 text-sm">
-              🌟 Plataforma ELLAS
-            </Badge>
-            
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-              Dando visibilidade para quem{' '}
-              <span className="text-gradient">constrói o futuro</span>{' '}
-              da ciência
-            </h1>
-            
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0">
-              Um acervo digital centralizado que conecta mulheres a oportunidades em STEM 
-              na América Latina. Descubra bolsas, mentorias e eventos.
-            </p>
+        {/* Initial Hero Content - Text + Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center lg:text-left max-w-2xl mb-8"
+        >
+          <Badge className="mb-6 bg-secondary text-secondary-foreground border-0 px-4 py-1.5 text-sm">
+            🌟 Plataforma ELLAS
+          </Badge>
+          
+          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+            Dando visibilidade para quem{' '}
+            <span className="text-gradient">constrói o futuro</span>{' '}
+            da ciência
+          </h1>
+          
+          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0">
+            Um acervo digital centralizado que conecta mulheres a oportunidades em STEM 
+            na América Latina. Descubra bolsas, mentorias e eventos.
+          </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
-              <Button size="lg" className="bg-gradient-hero hover:opacity-90 shadow-glow group">
-                Explorar Iniciativas
-                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              <Button size="lg" variant="outline" onClick={onOpenCadastro}>
-                Cadastrar Iniciativa
-              </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
+            <Button size="lg" className="bg-gradient-hero hover:opacity-90 shadow-glow group">
+              Explorar Iniciativas
+              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            <Button size="lg" variant="outline" onClick={onOpenCadastro}>
+              Cadastrar Iniciativa
+            </Button>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-6 max-w-md mx-auto lg:mx-0">
+            <div className="text-center lg:text-left">
+              <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
+                {stats.totalInitiatives}+
+              </div>
+              <div className="text-sm text-muted-foreground">Iniciativas</div>
             </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 max-w-md mx-auto lg:mx-0">
-              <div className="text-center lg:text-left">
-                <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
-                  {stats.totalInitiatives}+
-                </div>
-                <div className="text-sm text-muted-foreground">Iniciativas</div>
+            <div className="text-center lg:text-left">
+              <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
+                {stats.totalCountries}
               </div>
-              <div className="text-center lg:text-left">
-                <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
-                  {stats.totalCountries}
-                </div>
-                <div className="text-sm text-muted-foreground">Países</div>
-              </div>
-              <div className="text-center lg:text-left">
-                <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
-                  {(stats.totalBeneficiaries / 1000).toFixed(1)}k+
-                </div>
-                <div className="text-sm text-muted-foreground">Beneficiárias</div>
-              </div>
+              <div className="text-sm text-muted-foreground">Países</div>
             </div>
-          </motion.div>
+            <div className="text-center lg:text-left">
+              <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
+                {(stats.totalBeneficiaries / 1000).toFixed(1)}k+
+              </div>
+              <div className="text-sm text-muted-foreground">Beneficiárias</div>
+            </div>
+          </div>
+        </motion.div>
 
-          {/* Spacer for initial layout */}
-          <div className="hidden lg:block w-64" />
+        {/* Sticky Container - Trophy + Highlight Card */}
+        <div className="hidden lg:block sticky top-32 z-30">
+          <div className="grid grid-cols-2 gap-8 items-center min-h-[400px]">
+            {/* Left Column - Trophy (slides from right to left) */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              style={{ x: trophyX, scale: trophyScale }}
+              className="flex justify-center"
+            >
+              <div className="relative">
+                {/* Glow effect behind trophy */}
+                <div className="absolute -inset-8 bg-gradient-hero rounded-full opacity-20 blur-3xl animate-pulse-soft" />
+                <motion.img
+                  src={ellasTrophy}
+                  alt="ELLAS Trophy - Símbolo feminino com átomo"
+                  className="relative w-56 lg:w-64 h-auto drop-shadow-2xl"
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                />
+              </div>
+            </motion.div>
+
+            {/* Right Column - Highlight Card (slides in from right) */}
+            <motion.div
+              style={{ opacity: highlightOpacity, x: highlightX }}
+              className="flex justify-center"
+            >
+              <div className="w-full max-w-lg">
+                <DailyHighlightCard initiative={dailyHighlight} />
+              </div>
+            </motion.div>
+          </div>
         </div>
 
-        {/* Sticky Trophy Container */}
-        <div className="hidden lg:block sticky top-32 z-20 pointer-events-none" style={{ marginTop: '-280px' }}>
+        {/* Mobile: Trophy + Daily Highlight (no complex animation) */}
+        <div className="lg:hidden">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            style={{ x: trophyX, scale: trophyScale }}
-            className="flex justify-end pr-8"
+            className="flex justify-center mb-8"
           >
-            <div className="relative pointer-events-auto">
-              {/* Glow effect behind trophy */}
+            <div className="relative">
               <div className="absolute -inset-8 bg-gradient-hero rounded-full opacity-20 blur-3xl animate-pulse-soft" />
               <motion.img
                 src={ellasTrophy}
                 alt="ELLAS Trophy - Símbolo feminino com átomo"
-                className="relative w-56 lg:w-64 h-auto drop-shadow-2xl"
+                className="relative w-48 h-auto drop-shadow-2xl"
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               />
             </div>
           </motion.div>
-        </div>
 
-        {/* Highlight Section - appears after scroll */}
-        <div className="hidden lg:block mt-48">
           <motion.div
-            style={{ opacity: highlightOpacity, x: highlightX }}
-            className="flex justify-end"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <div className="w-full max-w-xl">
-              <DailyHighlightCard initiative={dailyHighlight} />
-            </div>
+            <DailyHighlightCard initiative={dailyHighlight} />
           </motion.div>
         </div>
-
-        {/* Mobile Daily Highlight - always visible */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-12 lg:hidden"
-        >
-          <DailyHighlightCard initiative={dailyHighlight} />
-        </motion.div>
       </div>
     </section>
   );
