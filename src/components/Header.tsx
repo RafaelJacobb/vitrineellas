@@ -1,8 +1,8 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Sparkles } from 'lucide-react';
+import { Menu, X, Sparkles, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
 interface HeaderProps {
   onOpenCadastro: () => void;
 }
@@ -50,8 +50,14 @@ export function Header({ onOpenCadastro }: HeaderProps) {
             ))}
           </nav>
 
-          {/* CTA Button */}
-          <div className="hidden md:flex items-center gap-4">
+          {/* CTA Buttons */}
+          <div className="hidden md:flex items-center gap-3">
+            <Link to="/auth">
+              <Button variant="ghost" size="sm" className="gap-2">
+                <User className="w-4 h-4" />
+                Entrar
+              </Button>
+            </Link>
             <Button onClick={onOpenCadastro} className="bg-gradient-hero hover:opacity-90 transition-opacity shadow-glow">
               Cadastrar Iniciativa
             </Button>
@@ -87,6 +93,12 @@ export function Header({ onOpenCadastro }: HeaderProps) {
                   {item.label}
                 </a>
               ))}
+              <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
+                <Button variant="outline" className="w-full gap-2">
+                  <User className="w-4 h-4" />
+                  Entrar / Cadastrar
+                </Button>
+              </Link>
               <Button onClick={() => { onOpenCadastro(); setIsMenuOpen(false); }} className="w-full bg-gradient-hero mt-2">
                 Cadastrar Iniciativa
               </Button>
