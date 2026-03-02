@@ -1,9 +1,7 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Star, Users, MapPin, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { getDailyHighlight, getStatistics, type Initiative } from '@/data/initiatives';
-import ellasTrophy from '@/assets/ellas-trophy.png';
 
 interface HeroSectionProps {
   onOpenCadastro: () => void;
@@ -12,51 +10,34 @@ interface HeroSectionProps {
 export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
   const dailyHighlight = getDailyHighlight();
   const stats = getStatistics();
-  
-  const { scrollY } = useScroll();
-  
-  // Single Sticky Actor - Trophy moves from right to left
-  // Starts at right side (translateX: 0), moves to left (translateX: -50vw)
-  const trophyX = useTransform(scrollY, [0, 600], ['calc(50vw - 8rem)', 'calc(-10vw)']);
-  const trophyScale = useTransform(scrollY, [0, 600], [1, 0.85]);
-  
-  // Highlight card slides in from right
-  const highlightOpacity = useTransform(scrollY, [200, 600], [0, 1]);
-  const highlightX = useTransform(scrollY, [200, 600], [400, 0]);
 
   return (
-    <section id="hero" className="relative min-h-[180vh] pt-20 md:pt-24 overflow-hidden">
+    <section id="hero" className="relative pt-20 md:pt-24 overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 bg-gradient-map opacity-50" />
       <div className="absolute top-20 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-soft" />
       <div className="absolute bottom-20 left-0 w-80 h-80 bg-accent/10 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: '1.5s' }} />
 
-      {/* Desktop Layout */}
-      <div className="hidden lg:block">
-        {/* Text Content - Static, stays at top */}
-        <div className="container relative mx-auto px-4 py-12 md:py-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-left max-w-2xl"
-          >
+      <div className="container relative mx-auto px-4 py-12 md:py-16">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+          {/* Text Content */}
+          <div className="text-center lg:text-left">
             <Badge className="mb-6 bg-secondary text-secondary-foreground border-0 px-4 py-1.5 text-sm">
               🌟 Plataforma ELLAS
             </Badge>
-            
+
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
               Dando visibilidade para quem{' '}
               <span className="text-gradient">constrói o futuro</span>{' '}
               da ciência
             </h1>
-            
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl">
-              Um acervo digital centralizado que conecta mulheres a oportunidades em STEM 
+
+            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0">
+              Um acervo digital centralizado que conecta mulheres a oportunidades em STEM
               na América Latina. Descubra bolsas, mentorias e eventos.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
               <Button size="lg" className="bg-gradient-hero hover:opacity-90 shadow-glow group">
                 Explorar Iniciativas
                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -67,149 +48,34 @@ export function HeroSection({ onOpenCadastro }: HeroSectionProps) {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 max-w-md">
-              <div className="text-left">
+            <div className="grid grid-cols-3 gap-6 max-w-md mx-auto lg:mx-0">
+              <div className="text-center lg:text-left">
                 <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
                   {stats.totalInitiatives}+
                 </div>
                 <div className="text-sm text-muted-foreground">Iniciativas</div>
               </div>
-              <div className="text-left">
+              <div className="text-center lg:text-left">
                 <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
                   {stats.totalCountries}
                 </div>
                 <div className="text-sm text-muted-foreground">Países</div>
               </div>
-              <div className="text-left">
+              <div className="text-center lg:text-left">
                 <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
                   {(stats.totalBeneficiaries / 1000).toFixed(1)}k+
                 </div>
                 <div className="text-sm text-muted-foreground">Beneficiárias</div>
               </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* SINGLE STICKY ACTOR - Trophy Container */}
-        <div className="sticky top-24 z-20 h-0">
-          <div className="container mx-auto px-4">
-            <div className="relative h-[400px]">
-              {/* Single Trophy Element - Travels from right to left */}
-              <motion.div
-                style={{ x: trophyX, scale: trophyScale }}
-                className="absolute top-0 right-0"
-              >
-                <div className="relative w-56 lg:w-64">
-                  <div className="absolute -inset-8 bg-gradient-hero rounded-full opacity-20 blur-3xl animate-pulse-soft" />
-                  <motion.img
-                    src={ellasTrophy}
-                    alt="ELLAS Trophy - Símbolo feminino com átomo"
-                    className="relative w-full h-auto drop-shadow-2xl"
-                    animate={{ y: [0, -8, 0] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                </div>
-              </motion.div>
-
-              {/* Highlight Card - Slides in from right */}
-              <motion.div
-                style={{ opacity: highlightOpacity, x: highlightX }}
-                className="absolute top-0 right-0 w-full max-w-lg"
-              >
-                <DailyHighlightCard initiative={dailyHighlight} />
-              </motion.div>
             </div>
           </div>
-        </div>
 
-        {/* Spacer to allow scroll animation to complete */}
-        <div className="h-[60vh]" />
-      </div>
-
-      {/* Mobile Layout */}
-      <div className="lg:hidden">
-        <div className="container relative mx-auto px-4 py-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-2xl mx-auto mb-8"
-          >
-            <Badge className="mb-6 bg-secondary text-secondary-foreground border-0 px-4 py-1.5 text-sm">
-              🌟 Plataforma ELLAS
-            </Badge>
-            
-            <h1 className="font-display text-4xl md:text-5xl font-bold leading-tight mb-6">
-              Dando visibilidade para quem{' '}
-              <span className="text-gradient">constrói o futuro</span>{' '}
-              da ciência
-            </h1>
-            
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl mx-auto">
-              Um acervo digital centralizado que conecta mulheres a oportunidades em STEM 
-              na América Latina. Descubra bolsas, mentorias e eventos.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button size="lg" className="bg-gradient-hero hover:opacity-90 shadow-glow group">
-                Explorar Iniciativas
-                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              <Button size="lg" variant="outline" onClick={onOpenCadastro}>
-                Cadastrar Iniciativa
-              </Button>
+          {/* Highlight Card */}
+          <div className="flex items-start justify-center lg:justify-end">
+            <div className="w-full max-w-lg">
+              <DailyHighlightCard initiative={dailyHighlight} />
             </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 max-w-md mx-auto">
-              <div className="text-center">
-                <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
-                  {stats.totalInitiatives}+
-                </div>
-                <div className="text-sm text-muted-foreground">Iniciativas</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
-                  {stats.totalCountries}
-                </div>
-                <div className="text-sm text-muted-foreground">Países</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
-                  {(stats.totalBeneficiaries / 1000).toFixed(1)}k+
-                </div>
-                <div className="text-sm text-muted-foreground">Beneficiárias</div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Mobile Trophy */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex justify-center mb-8"
-          >
-            <div className="relative">
-              <div className="absolute -inset-8 bg-gradient-hero rounded-full opacity-20 blur-3xl animate-pulse-soft" />
-              <motion.img
-                src={ellasTrophy}
-                alt="ELLAS Trophy - Símbolo feminino com átomo"
-                className="relative w-48 h-auto drop-shadow-2xl"
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              />
-            </div>
-          </motion.div>
-
-          {/* Mobile Highlight */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <DailyHighlightCard initiative={dailyHighlight} />
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
@@ -226,9 +92,8 @@ function DailyHighlightCard({ initiative }: { initiative: Initiative }) {
 
   return (
     <div className="relative">
-      {/* Glow effect */}
       <div className="absolute -inset-4 bg-gradient-hero rounded-3xl opacity-20 blur-2xl animate-pulse-soft" />
-      
+
       <div className="relative bg-card/95 backdrop-blur-sm rounded-2xl border border-border shadow-lg overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-hero p-4 md:p-5">
@@ -249,7 +114,6 @@ function DailyHighlightCard({ initiative }: { initiative: Initiative }) {
             {initiative.description}
           </p>
 
-          {/* Categories */}
           <div className="flex flex-wrap gap-2 mb-4">
             {initiative.categories.map((cat) => (
               <span key={cat} className={`px-2 py-0.5 rounded-full text-xs font-medium ${categoryColors[cat]}`}>
@@ -258,7 +122,6 @@ function DailyHighlightCard({ initiative }: { initiative: Initiative }) {
             ))}
           </div>
 
-          {/* Meta info */}
           <div className="flex flex-wrap gap-3 text-xs text-muted-foreground mb-4">
             <div className="flex items-center gap-1">
               <MapPin className="w-3 h-3" />
@@ -276,7 +139,6 @@ function DailyHighlightCard({ initiative }: { initiative: Initiative }) {
             </div>
           </div>
 
-          {/* Organization */}
           <div className="flex items-center justify-between pt-3 border-t border-border">
             <span className="text-xs font-medium text-foreground">
               {initiative.organization}
